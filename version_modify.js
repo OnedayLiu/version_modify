@@ -11,28 +11,26 @@ function scanFolder(path) {
         } else {
             fs.readFile(tmpPath, 'utf8', function(err, data) {
                 if (err) throw err;
-                if (item == "test.js") {
-                    return;
-                }
-                var reg1 = /\.js\s*"/g,
-                    reg2 = /\.js(\?)v=(\d*)/g,
-                    reg3 = /\.css\s"/g,
-                    reg4 = /\.css(\?)v=(\d*)/g;
-                var isModified = false;
+                var reg1 = /\.js\s*(?=")/g,
+                    reg2 = /\.js(\?)v=.*(?=")/g,
+                    reg3 = /\.css\s*(?=")/g,
+                    reg4 = /\.css(\?)v=.*(?=")/g;
+                var isModified = false,
+                	version = new Date()/1;
                 if (reg1.test(data)) {
-                    data = data.replace(reg1, ".js?v=" + (new Date() / 1) + '"');
+                    data = data.replace(reg1, ".js?v=" + version);
                     isModified = true;
                 } 
                 if (reg2.test(data)) {
-                    data = data.replace(reg2, ".js?v=" + (new Date() / 1));
+                    data = data.replace(reg2, ".js?v=" + version);
                     isModified = true;
                 }
                 if (reg3.test(data)) {
-                    data = data.replace(reg3, ".css?v=" + (new Date() / 1) + '"');
+                    data = data.replace(reg3, ".css?v=" + version);
                     isModified = true;
                 } 
                 if (reg4.test(data)) {
-                    data = data.replace(reg4, ".css?v=" + (new Date() / 1));
+                    data = data.replace(reg4, ".css?v=" + version);
                     isModified = true;
                 }
                 if (!isModified) {
@@ -53,5 +51,14 @@ console.log("******************log***********************");
 
 
 //opms
-scanFolder("D:\\workspaces\\opms\\src\\main\\webapp\\WEB-INF\\jsp\\common");//common
+// scanFolder("D:\\workspaces\\opms\\src\\main\\webapp\\WEB-INF\\jsp\\common");//common
 // scanFolder("D:\\workspaces\\opms\\src\\main\\webapp\\WEB-INF\\jsp\\jst\\optsys\\specialtopic");//专题管理
+
+//bgm
+// scanFolder("D:\\workspaces\\bgm\\src\\main\\webapp\\WEB-INF\\jsp\\common");//common
+// scanFolder("D:\\workspaces\\bgm\\src\\main\\webapp\\WEB-INF\\jsp\\jst\\bgm");//全部
+
+
+//pms
+scanFolder("D:\\workspaces\\pms\\src\\main\\webapp\\WEB-INF\\jsp\\common");//common
+
