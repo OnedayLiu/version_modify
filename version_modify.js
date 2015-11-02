@@ -11,30 +11,17 @@ function scanFolder(path) {
 		} else {
 			fs.readFile(tmpPath, 'utf8', function(err, data) {
 				if (err) throw err;
-				if (item == "test.js") {
-					return;
-				}
-				var reg1 = /\.js"/g,
-					reg2 = /\.js(\?)v=(\d*)/g,
-					reg3 = /\.css"/g,
-					reg4 = /\.css(\?)v=(\d*)/g;
-				var isModified = false;
-				if (reg1.test(data)) {
-					data = data.replace(reg1, ".js?v=" + (new Date() / 1) + '"');
+				var reg = /\.(js|css).*"/g,
+					isModified = false,
+					version = new Date()/1;
+				data = data.replace(reg,function(arg){
 					isModified = true;
-				} 
-				if (reg2.test(data)) {
-					data = data.replace(reg2, ".js?v=" + (new Date() / 1));
-					isModified = true;
-				}
-				if (reg3.test(data)) {
-					data = data.replace(reg3, ".css?v=" + (new Date() / 1) + '"');
-					isModified = true;
-				} 
-				if (reg4.test(data)) {
-					data = data.replace(reg4, ".css?v=" + (new Date() / 1));
-					isModified = true;
-				}
+					if(arg.indexOf(".js")>-1){
+						return ".js?v=" + version + '"';
+					}else if(arg.indexOf(".css")>-1){
+						return ".css?v=" + version + '"';
+					}
+				});
 				if (!isModified) {
 					return;
 				}
