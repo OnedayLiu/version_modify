@@ -11,27 +11,21 @@ function scanFolder(path) {
         } else {
             fs.readFile(tmpPath, 'utf8', function(err, data) {
                 if (err) throw err;
-                var reg1 = /\.js\s*(?=")/g,
-                    reg2 = /\.js(\?)v=.*(?=")/g,
-                    reg3 = /\.css\s*(?=")/g,
-                    reg4 = /\.css(\?)v=.*(?=")/g;
+                var reg1 = /\.(js|css)\s*(?=")/g,
+                    reg2 = /\.(js|css)(\?)v=.*(?=")/g;
                 var isModified = false,
                 	version = new Date()/1;
-                if (reg1.test(data)) {
-                    data = data.replace(reg1, ".js?v=" + version);
-                    isModified = true;
-                } 
-                if (reg2.test(data)) {
-                    data = data.replace(reg2, ".js?v=" + version);
-                    isModified = true;
-                }
-                if (reg3.test(data)) {
-                    data = data.replace(reg3, ".css?v=" + version);
-                    isModified = true;
-                } 
-                if (reg4.test(data)) {
-                    data = data.replace(reg4, ".css?v=" + version);
-                    isModified = true;
+                data = data.replace(reg1,doIt);
+                data = data.replace(reg2,doIt);
+                function doIt(arg){
+                	if(arg.indexOf(".js")>-1){
+                		isModified = true;
+                		return ".js?v=" + version;
+                	}
+                	if(arg.indexOf(".css")>-1){
+                		isModified = true;
+                		return ".css?v=" + version;
+                	}
                 }
                 if (!isModified) {
                     return;
